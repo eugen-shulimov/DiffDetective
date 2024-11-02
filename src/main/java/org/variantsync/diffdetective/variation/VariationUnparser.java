@@ -81,4 +81,26 @@ public class VariationUnparser {
     return variationDiffUnparser(diff,DiffLinesLabel::withInvalidLineNumbers);
   }
 
+  public static String undiff(String text,Time time){
+    StringBuilder result = new StringBuilder();
+    String[] textSplit = text.split("\n");
+    if(Time.AFTER == time){
+      for (String line: textSplit) {
+        if(line.charAt(0) != '-'){
+          result.append(line.substring(1));
+          result.append("\n");
+        }
+      }
+      return result.substring(0, result.length() - 1);
+    }else{
+      for (String line: textSplit) {
+        if(line.charAt(0) != '+'){
+          result.append(line.substring(1));
+          result.append("\n");
+        }
+      }
+      return result.substring(0, result.length() - 1);
+    }
+  }
+
 }

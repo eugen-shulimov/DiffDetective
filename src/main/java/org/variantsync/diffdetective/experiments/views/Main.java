@@ -5,6 +5,7 @@ import org.variantsync.diffdetective.analysis.Analysis;
 import org.variantsync.diffdetective.analysis.FilterAnalysis;
 import org.variantsync.diffdetective.analysis.StatisticsAnalysis;
 import org.variantsync.diffdetective.datasets.PatchDiffParseOptions;
+import org.variantsync.diffdetective.datasets.PatchDiffParseOptions.DiffStoragePolicy;
 import org.variantsync.diffdetective.datasets.Repository;
 import org.variantsync.diffdetective.variation.diff.filter.VariationDiffFilter;
 import org.variantsync.diffdetective.variation.diff.parse.VariationDiffParseOptions;
@@ -73,7 +74,7 @@ public class Main {
                 Paths.get("results", "views", "current"),
                 defaultOptions.datasetsFile(),
                 repo -> new PatchDiffParseOptions(
-                        PatchDiffParseOptions.DiffStoragePolicy.DO_NOT_REMEMBER,
+                        DiffStoragePolicy.REMEMBER_FULL_DIFF,
                         VARIATION_DIFF_PARSE_OPTIONS
                 ),
                 defaultOptions.getFilterForRepo(),

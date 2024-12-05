@@ -1,5 +1,6 @@
 package org.variantsync.diffdetective.variation.tree;
 
+import java.io.StringReader;
 import org.variantsync.diffdetective.datasets.PatchDiffParseOptions;
 import org.variantsync.diffdetective.diff.result.DiffParseException;
 import org.variantsync.diffdetective.util.Assert;
@@ -102,6 +103,23 @@ public record VariationTree<L extends Label>(
 
         return new VariationTree<>(tree, source);
     }
+
+    public static VariationTree<DiffLinesLabel> fromText(
+        final String input,
+        final VariationTreeSource source,
+        final VariationDiffParseOptions parseOptions
+    ) throws IOException, DiffParseException {
+        VariationTreeNode<DiffLinesLabel> tree = VariationDiffParser
+            .createVariationTree(new BufferedReader(new StringReader(input)), parseOptions)
+            .getRoot()
+            // Arbitrarily choose the BEFORE projection as both should be equal.
+            .projection(BEFORE)
+            .toVariationTree();
+
+        return new VariationTree<>(tree, source);
+    }
+
+
 
     public static <L extends Label> VariationTree<L> fromProjection(final Projection<L> projection, final VariationTreeSource source) {
         return fromVariationNode(projection, source);

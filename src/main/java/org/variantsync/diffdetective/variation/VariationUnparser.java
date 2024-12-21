@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.Function;
 import org.eclipse.jgit.diff.DiffAlgorithm.SupportedAlgorithm;
+import org.variantsync.diffdetective.util.FileUtils;
 import org.variantsync.diffdetective.variation.diff.Time;
 import org.variantsync.diffdetective.variation.diff.VariationDiff;
 import org.variantsync.diffdetective.variation.diff.construction.JGitDiff;
@@ -97,9 +98,11 @@ public class VariationUnparser {
       for (String line : textSplit) {
         if (line.isEmpty() ) {
           result.append(line);
+          result.append("\n");
         }
         else if(line.charAt(0) != zeichen){
           result.append(line.substring(1));
+          result.append("\n");
         }
       }
       if(result.isEmpty()){

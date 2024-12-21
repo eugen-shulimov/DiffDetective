@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.variantsync.diffdetective.diff.result.DiffParseException;
 import org.variantsync.diffdetective.experiments.views_es.UnparseAnalysis;
 import org.variantsync.diffdetective.variation.DiffLinesLabel;
+import org.variantsync.diffdetective.variation.diff.DiffNode;
 import org.variantsync.diffdetective.variation.diff.Time;
 import org.variantsync.diffdetective.variation.diff.VariationDiff;
 import org.variantsync.diffdetective.variation.diff.parse.VariationDiffParseOptions;
@@ -63,14 +64,44 @@ public class VariationUnparserTest {
 
 
   @Test
-  public void testDiff(){
+  public void testTree(){
     String source = "";
     String temp = "";
     try {
-      source = Files.readString(Path.of("src","test","resources","unparser","test9.txt"));
+      source = Files.readString(Path.of("src","test","resources","unparser","_error0.txt"));
       VariationTree<DiffLinesLabel> tree = VariationTree.fromText(source,VariationTreeSource.Unknown,VariationDiffParseOptions.Default);
       temp = VariationUnparser.variationTreeUnparser(tree);
       System.out.println(removeWhitespace(source).equals(removeWhitespace(temp)));
+      //System.out.println(removeWhitespace(source));
+      //System.out.println("Ende");
+      //System.out.println(removeWhitespace(temp));
+      //System.out.println("Ende");
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void testDiffSemEq(){
+    String source = "";
+    String temp = "";
+    try {
+
+      String number = "010";
+      source = Files.readString(Path.of("src","test","resources","unparser","diff","error"+number+".txt"));
+      source = source.substring("textDiff: \n".length());
+      VariationDiff<DiffLinesLabel> diff = VariationDiff.fromDiff(source,VariationDiffParseOptions.Default);
+      temp = VariationUnparser.variationDiffUnparser(diff);
+      //Files.writeString(Path.of("src","test","resources","unparser","diff","source"+number+".txt"),source);
+      //Files.writeString(Path.of("src","test","resources","unparser","diff","unparse"+number+".txt"),temp);
+      System.out.println(removeWhitespace(source).equals(removeWhitespace(temp)));
+      Files.writeString(Path.of("src","test","resources","unparser","diff","diffTrees","sourceTreeBefore"+number+".txt"),VariationUnparser.undiff(source,Time.BEFORE));
+      Files.writeString(Path.of("src","test","resources","unparser","diff","diffTrees","sourceTreeAfter"+number+".txt"),VariationUnparser.undiff(source,Time.AFTER));
+      Files.writeString(Path.of("src","test","resources","unparser","diff","diffTrees","unparseTreeBefore"+number+".txt"),VariationUnparser.undiff(temp,Time.BEFORE));
+      Files.writeString(Path.of("src","test","resources","unparser","diff","diffTrees","unparseTreeAfter"+number+".txt"),VariationUnparser.undiff(temp,Time.AFTER));
+      System.out.println(removeWhitespace(VariationUnparser.undiff(source,Time.BEFORE)).equals(removeWhitespace(VariationUnparser.undiff(temp,Time.BEFORE))));
+      System.out.println(removeWhitespace(VariationUnparser.undiff(source,Time.AFTER)).equals(removeWhitespace(VariationUnparser.undiff(temp,Time.AFTER))));
+
       //System.out.println(removeWhitespace(source));
       //System.out.println("Ende");
       //System.out.println(removeWhitespace(temp));
@@ -159,8 +190,5 @@ public class VariationUnparserTest {
     return temp;
   }
 
-  /*public static String removeWhitespace(String string){
-    return string.replaceAll("\\s+","");
-  }*/
 
 }
